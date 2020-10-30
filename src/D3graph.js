@@ -42,8 +42,7 @@ const draw = (props) => {
  .range([ 0, w]);
   svg.append("g")
   .attr("transform", "translate(0," + h + ")")
-  .call(d3.axisBottom(x))
-  .style("stroke","gray");
+  .call(d3.axisBottom(x));
 
     // Add Y axis
   var y = d3.scaleLinear()

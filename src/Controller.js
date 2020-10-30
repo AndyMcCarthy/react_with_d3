@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
 import D3graph from './D3graph.js';
+import Button from '@material-ui/core/Button';
+import Select from '@material-ui/core/Select';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText'
 
 export default class Controller extends Component {
   state = {
@@ -36,7 +42,7 @@ export default class Controller extends Component {
   onChange = (evt) => {
   	this.setState({[evt.target.name]: evt.target.value})
   }
-
+//TODO swap select for material UI one
   render() {
     return(
       <div className="controller">
@@ -49,6 +55,7 @@ export default class Controller extends Component {
           <option value="yellow">yellow</option>
         </select>
         <label htmlFor="variableSelect">pick a variable:</label>
+
         <select id="variableSelect" name="variable" onChange={this.onChange} value={this.state.variable||"default"}>
           <option disabled value="default">choose</option>
           <option value="valueA">valueA</option>
@@ -56,10 +63,33 @@ export default class Controller extends Component {
           <option value="valueC">valueC</option>
         </select>
 
+        
+
         <label htmlFor="pixelInput">how big:</label>
         <input id="pixelInput" name="width" onChange={this.onChange} />
-        <button type="submit">draw!</button>
+        <div>
+        <Button type="submit" variant="contained" color="primary">
+              draw!
+        </Button>
+        </div>
+
         </form>
+        <FormControl className={classes.formControl}>
+        <InputLabel id="demo-simple-select-label">Age</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={age}
+          onChange={handleChange}
+        >
+          <MenuItem value={10}>Ten</MenuItem>
+          <MenuItem value={20}>Twenty</MenuItem>
+          <MenuItem value={30}>Thirty</MenuItem>
+        </Select>
+        </FormControl>
+
+
+
         { this.state.toDraw.length ? <D3graph shapes={this.state.toDraw}/> : null}
       </div>
 
