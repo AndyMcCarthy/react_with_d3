@@ -1,98 +1,96 @@
 import React, { Component } from 'react';
-import D3graph from './D3graph.js';
-import Button from '@material-ui/core/Button';
+import D3graph from './D3graph';
 import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText'
+import PieHooks from "./PieHooks";
+import * as d3 from "d3";
 
-export default class Controller extends Component {
-  state = {
-	  color: "", 
-    width: "",
-    variable: "",
-    data: [], 
-	  toDraw: [], 
-  }
-  
-  onSubmit = (evt) => {
-    evt.preventDefault(); 
-    const graphData= [
-      {time:0, valueA:5, valueB:5, valueC:13},
-      {time:1, valueA:4, valueB:5, valueC:13},
-      {time:2, valueA:3, valueB:6, valueC:15},
-      {time:3, valueA:1, valueB:7, valueC:16},
-      {time:4, valueA:0, valueB:8, valueC:17},
-      {time:5, valueA:1, valueB:9, valueC:18},
-      {time:6, valueA:2, valueB:10, valueC:19},
-      {time:7, valueA:3, valueB:11, valueC:18},
-      {time:8, valueA:4, valueB:12, valueC:17},
-      {time:9, valueA:5, valueB:13, valueC:14},
-    ]
-  	const newShape = {
-  	   color: this.state.color, 
-       width: this.state.width,
-       variable: this.state.variable,
-       data: graphData
-  	}
-    this.setState({ toDraw: [...this.state.toDraw, newShape]})
-  } 
+//export default class Controller extends Component {
+//export default function Controller() {
+const Controller = props => {
 
-  onChange = (evt) => {
-  	this.setState({[evt.target.name]: evt.target.value})
+  const generateData = (value, length = 5) =>
+  d3.range(length).map((item, index) => ({
+    date: index,
+    value: value === null || value === undefined ? Math.random() * 100 : value
+  }));
+
+  const generateColor = (value) => ({
+    value: value ===null  || value === undefined ? "red" : value
+  });
+
+  const [data, setData] = React.useState(generateData());
+  const changeData = () => {
+    setData(generateData());
+  };
+
+  const graphData= [
+    {time:0, valueA:5, valueB:5, valueC:13},
+    {time:1, valueA:4, valueB:5, valueC:13},
+    {time:2, valueA:3, valueB:6, valueC:15},
+    {time:3, valueA:1, valueB:7, valueC:16},
+    {time:4, valueA:0, valueB:8, valueC:17},
+    {time:5, valueA:1, valueB:9, valueC:18},
+    {time:6, valueA:2, valueB:10, valueC:19},
+    {time:7, valueA:3, valueB:11, valueC:18},
+    {time:8, valueA:4, valueB:12, valueC:17},
+    {time:9, valueA:5, valueB:13, valueC:14},
+  ]
+
+  //const [graph, setGraph] = React.useState({myGraph: { color: "red", variable: "valueA", data: graphData}});
+  const [color, setColor] = React.useState("red");
+  const [variable, setVariable] = React.useState("valueA");
+
+  const colorChange = (evt) => {
+    setColor(evt.target.value);
   }
+
+  const variableChange = (evt) => {    
+    setVariable(evt.target.value);    
+  }
+
+
+
 //TODO swap select for material UI one
-  render() {
+  //render() {
     return(
       <div className="controller">
-        <form onSubmit={this.onSubmit}>
-        <label htmlFor="colorSelect">pick a color:</label>
-        <select id="colorSelect" name="color" onChange={this.onChange} value={this.state.color||"default"}>
-          <option disabled value="default">choose</option>
-          <option value="red">red</option>
-          <option value="orange">orange</option>
-          <option value="yellow">yellow</option>
-        </select>
-        <label htmlFor="variableSelect">pick a variable:</label>
-
-        <select id="variableSelect" name="variable" onChange={this.onChange} value={this.state.variable||"default"}>
-          <option disabled value="default">choose</option>
-          <option value="valueA">valueA</option>
-          <option value="valueB">valueB</option>
-          <option value="valueC">valueC</option>
-        </select>
-
-        
-
-        <label htmlFor="pixelInput">how big:</label>
-        <input id="pixelInput" name="width" onChange={this.onChange} />
+        <Select id="select-variable" name="variable" value={variable} onChange={variableChange}>
+          <MenuItem value={"valueA"}>valueA</MenuItem>
+          <MenuItem value={"valueB"}>valueB</MenuItem>
+          <MenuItem value={"valueC"}>valueC</MenuItem>
+        </Select>
+        <Select id="select-color" name = "color" value={color} onChange={colorChange}>
+          <MenuItem value={"red"}>red</MenuItem>
+          <MenuItem value={"orange"}>orange</MenuItem>
+          <MenuItem value={"yellow"}>yellow</MenuItem>
+        </Select>       
+        <D3graph gcolor={color} gvar = {variable} data={graphData}/> 
         <div>
-        <Button type="submit" variant="contained" color="primary">
-              draw!
-        </Button>
+              Graph colour should be: {color} and varable should be {variable}
         </div>
 
-        </form>
-        <FormControl className={classes.formControl}>
-        <InputLabel id="demo-simple-select-label">Age</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={age}
-          onChange={handleChange}
-        >
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
-        </Select>
-        </FormControl>
 
+        <div>
+      <button onClick={changeData}>Transform</button>
+      </div>
+      <div>
+        <span className="label">Hooks</span>
+        <PieHooks
+          data={data}
+          width={200}
+          height={200}
+          innerRadius={60}
+          outerRadius={100}
+          gcolor = {color}
+        />
+      </div>
 
-
-        { this.state.toDraw.length ? <D3graph shapes={this.state.toDraw}/> : null}
       </div>
 
     )
-  }
+    
+  //}
 }
+export default Controller;
