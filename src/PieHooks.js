@@ -16,7 +16,6 @@ const PieHooks = props => {
 
   useEffect(
     () => {
-      console.log(props.gcolor)
       const data = createPie(props.data);
       const group = d3.select(ref.current);
       const groupWithData = group.selectAll("g.arc").data(data);

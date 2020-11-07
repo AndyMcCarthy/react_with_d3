@@ -1,14 +1,59 @@
 import React, { Component } from 'react';
 import D3graph from './D3graph';
+import PropTypes from 'prop-types';
 import Select from '@material-ui/core/Select';
-import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
 import PieHooks from "./PieHooks";
 import * as d3 from "d3";
+import { graphData } from "./Data/basicdata";
 
-//export default class Controller extends Component {
-//export default function Controller() {
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+  return (
+    <div role="tabpanel" hidden={value !== index} id={`simple-tabpanel-${index}`} aria-labelledby={`simple-tab-${index}`} {...other} >
+      {value === index && (
+        <Box p={3}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.any.isRequired,
+  value: PropTypes.any.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
+  },
+}));
+
 const Controller = props => {
+
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
   const generateData = (value, length = 5) =>
   d3.range(length).map((item, index) => ({
@@ -16,27 +61,10 @@ const Controller = props => {
     value: value === null || value === undefined ? Math.random() * 100 : value
   }));
 
-  const generateColor = (value) => ({
-    value: value ===null  || value === undefined ? "red" : value
-  });
-
   const [data, setData] = React.useState(generateData());
   const changeData = () => {
     setData(generateData());
   };
-
-  const graphData= [
-    {time:0, valueA:5, valueB:5, valueC:13},
-    {time:1, valueA:4, valueB:5, valueC:13},
-    {time:2, valueA:3, valueB:6, valueC:15},
-    {time:3, valueA:1, valueB:7, valueC:16},
-    {time:4, valueA:0, valueB:8, valueC:17},
-    {time:5, valueA:1, valueB:9, valueC:18},
-    {time:6, valueA:2, valueB:10, valueC:19},
-    {time:7, valueA:3, valueB:11, valueC:18},
-    {time:8, valueA:4, valueB:12, valueC:17},
-    {time:9, valueA:5, valueB:13, valueC:14},
-  ]
 
   //const [graph, setGraph] = React.useState({myGraph: { color: "red", variable: "valueA", data: graphData}});
   const [color, setColor] = React.useState("red");
@@ -50,44 +78,53 @@ const Controller = props => {
     setVariable(evt.target.value);    
   }
 
-
-
 //TODO swap select for material UI one
   //render() {
     return(
       <div className="controller">
-        <Select id="select-variable" name="variable" value={variable} onChange={variableChange}>
-          <MenuItem value={"valueA"}>valueA</MenuItem>
-          <MenuItem value={"valueB"}>valueB</MenuItem>
-          <MenuItem value={"valueC"}>valueC</MenuItem>
-        </Select>
-        <Select id="select-color" name = "color" value={color} onChange={colorChange}>
-          <MenuItem value={"red"}>red</MenuItem>
-          <MenuItem value={"orange"}>orange</MenuItem>
-          <MenuItem value={"yellow"}>yellow</MenuItem>
-        </Select>       
-        <D3graph gcolor={color} gvar = {variable} data={graphData}/> 
+        <AppBar position="static">
+        <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+          <Tab label="Line Chart" {...a11yProps(0)} />
+          <Tab label="Pie Chart" {...a11yProps(1)} />
+        </Tabs>
+      </AppBar>
+      <TabPanel value={value} index={0}>
         <div>
-              Graph colour should be: {color} and varable should be {variable}
-        </div>
-
-
-        <div>
+          <Select id="select-variable" name="variable" value={variable} onChange={variableChange}>
+              <MenuItem value={"valueA"}>valueA</MenuItem>
+              <MenuItem value={"valueB"}>valueB</MenuItem>
+              <MenuItem value={"valueC"}>valueC</MenuItem>
+            </Select>
+            <Select id="select-color" name = "color" value={color} onChange={colorChange}>
+              <MenuItem value={"red"}>red</MenuItem>
+              <MenuItem value={"orange"}>orange</MenuItem>
+              <MenuItem value={"yellow"}>yellow</MenuItem>
+            </Select>   
+          </div>    
+            <D3graph gcolor={color} gvar = {variable} data={graphData}  width={500}
+          height={500}/> 
+            <div>
+                  Graph colour should be: {color} and varable should be {variable}
+            </div>
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+      <div>
       <button onClick={changeData}>Transform</button>
       </div>
-      <div>
-        <span className="label">Hooks</span>
         <PieHooks
           data={data}
-          width={200}
-          height={200}
+          width={500}
+          height={500}
           innerRadius={60}
           outerRadius={100}
-          gcolor = {color}
-        />
+        />     
+      </TabPanel>
       </div>
 
-      </div>
+
+
+        
+      
 
     )
     

@@ -11,7 +11,7 @@ const D3graph = (props) => {
  
  }, [props])
  
-  return <div className="d3graph" />
+  return <svg className="d3graph" width={props.width} height={props.height} />
 }
 
 const draw = (props) => {
