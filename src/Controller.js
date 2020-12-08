@@ -12,6 +12,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import PieHooks from "./PieHooks";
 import * as d3 from "d3";
 import { graphData } from "./Data/basicdata";
+import { AdverseEventData } from "./Data/AdverseEventData";
+import HorizontalGraph from './HorizontalGraph';
 
 
 function TabPanel(props) {
@@ -86,6 +88,7 @@ const Controller = props => {
         <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
           <Tab label="Line Chart" {...a11yProps(0)} />
           <Tab label="Pie Chart" {...a11yProps(1)} />
+          <Tab label="Grouped dotplot" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -119,6 +122,16 @@ const Controller = props => {
           outerRadius={100}
         />     
       </TabPanel>
+      <TabPanel value={value} index={2}>
+        <HorizontalGraph
+          data={AdverseEventData}
+          width={500}
+          height={500}
+          innerRadius={60}
+          outerRadius={100}
+        />     
+      </TabPanel>
+
       </div>
 
 

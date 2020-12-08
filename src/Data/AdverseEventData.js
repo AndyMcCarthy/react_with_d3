@@ -1,0 +1,17 @@
+export const AdverseEventData= [
+    {treatment:"placebo", AE:"death", relative_risk:0},
+    {treatment:"placebo", AE:"headache", relative_risk:5},
+    {treatment:"placebo", AE:"vomiting", relative_risk:15},
+    {treatment:"placebo", AE:"toothache", relative_risk:2},
+    {treatment:"placebo", AE:"loss of smell", relative_risk:5},
+    {treatment:"rx1", AE:"death", relative_risk:10},
+    {treatment:"rx1", AE:"headache", relative_risk:25},
+    {treatment:"rx1", AE:"vomiting", relative_risk:25},
+    {treatment:"rx1", AE:"toothache", relative_risk:5},
+    {treatment:"rx1", AE:"loss of smell", relative_risk:1},
+    {treatment:"standardOfCare", AE:"death", relative_risk:5},
+    {treatment:"standardOfCare", AE:"headache", relative_risk:40},
+    {treatment:"standardOfCare", AE:"vomiting", relative_risk:55},
+    {treatment:"standardOfCare", AE:"toothache", relative_risk:65},
+    {treatment:"standardOfCare", AE:"loss of smell", relative_risk:45},
+  ]
